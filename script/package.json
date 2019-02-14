@@ -1,0 +1,16 @@
+{
+  "name": "design_system_doc_gen",
+  "version": "1.0.0",
+  "description": "Parses all swift files to find relevant design system component comments",
+  "main": "doc-parser2.js",
+  "scripts": {
+    "run": "node doc-parser.js",
+    "clean": "rm -rf output; rm -rf node_modules"
+  },
+  "author": "Markus Teufel",
+  "license": "ISC",
+  "dependencies": {
+    "glob": "^7.1.3",
+    "pegjs": "^0.10.0"
+  }
+}

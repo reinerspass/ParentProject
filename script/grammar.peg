@@ -1,0 +1,63 @@
+// FILE
+start = items:item* 
+{ 
+	return items.filter(function (el) {
+		return el != null;
+	})
+}
+
+item = comment / content_line
+
+// CONTENT
+content_line = _ p:$(content) _ { return null }
+content = .
+
+// COMMENT
+comment 
+= _ p:( swift_style_comment ) _ 
+{ 
+	return p.flatMap(function(e) {
+		return e
+	}) 
+}
+
+swift_style_comment
+= a:(line: swift_style_line { return line })+ b:class_defenition?
+{ 
+	return [a, b].filter(function(e){ return e!= null })
+}
+
+swift_style_line 
+= _ swift_comment_marker c:(marker / ssc:swift_style_content)
+{ 
+	return c 
+}
+
+swift_style_content 
+= c:any_till_nl 
+{ 
+	return { "CON" : c} 
+}
+
+class_defenition 
+= nl (!(class_defenition_marker / nl) .)* class_defenition_marker c:$(chars*) any_till_nl 
+{ 
+	return { "CLS" : c} 
+}
+
+class_defenition_marker
+= "var " / "class " / "struct "
+
+// MARKER
+marker = _ marker_mark _ c:any_till_nl 
+{ 
+	return { "MRK" : c} 
+}
+
+// UTILS
+marker_mark = '@DesignSystemComponent: '
+any_till_nl = $(!nl .)*
+_ = [ \t\r\n]* { return null }
+swift_comment_marker = '///'
+nl = '\n'
+chars = [a-zA-Z0-9]
